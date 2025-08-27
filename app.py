@@ -105,11 +105,12 @@ user_input = st.chat_input(
 def ask_gpt(q: str):
     history = [m for m in st.session_state.messages][-8:] + [{"role": "user", "content": q}]
     resp = client.chat.completions.create(
-        model=model_name,           # 현재 선택된 모델
-        messages=history,
-        temperature=temperature,
-        max_completion_tokens=max_tokens
-    )
+    model=model_name,
+    messages=history,
+    max_completion_tokens=max_tokens   # ✅ gpt-5 계열은 max_completion_tokens 사용
+    # temperature 인자 제거!
+)
+
     text = resp.choices[0].message.content.strip() if resp.choices else "응답 없음"
     # ✅ 실제로 어떤 모델이 호출됐는지 같이 반환
     used_model = getattr(resp, "model", model_name)
