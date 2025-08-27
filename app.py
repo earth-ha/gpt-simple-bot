@@ -83,34 +83,28 @@ with st.sidebar:
         "- 중요한 결정은 공식 자료로 다시 확인해주세요.\n"
     )
     st.divider()
-    st.subheader("🧹 대화 관리")
-    if st.button("대화 다시 시작", use_container_width=True):
-        init_messages()
-        st.rerun()
-    st.divider()
-    st.subheader("💡 예시 질문")
+st.subheader("💡 예시 질문")
 
-    if st.button("오늘 뭐 해먹지?"):
-        q = "냉장고에 재료가 별로 없을 때 간단히 만들 수 있는 저녁 메뉴 추천해줘."
-        st.session_state.messages.append({"role": "user", "content": q})
-        with st.chat_message("user"): st.markdown(q)
-        with st.chat_message("assistant"):
-            with st.spinner("생각 중…"):
-                ans, used_model = ask_gpt(q)
-                st.markdown(ans)
-                st.caption(f"모델: `{used_model}`")
-        st.session_state.messages.append({"role": "assistant", "content": ans})
+if st.button("오늘 뭐 해먹지?"):
+    q = "냉장고에 재료가 별로 없을 때 간단히 만들 수 있는 저녁 메뉴 추천해줘."
+    st.session_state.messages.append({"role": "user", "content": q})
+    try:
+        ans, used_model = ask_gpt(q)
+    except Exception as e:
+        ans, used_model = f"오류가 발생했습니다: {e}", model_name
+    st.session_state.messages.append({"role": "assistant", "content": ans})
+    st.rerun()   # ✅ 화면 갱신해서 채팅창에 바로 보이게
 
-    if st.button("오늘 날씨 어때?"):
-        q = "오늘 대한민국 주요 도시의 날씨를 알려줘."
-        st.session_state.messages.append({"role": "user", "content": q})
-        with st.chat_message("user"): st.markdown(q)
-        with st.chat_message("assistant"):
-            with st.spinner("생각 중…"):
-                ans, used_model = ask_gpt(q)
-                st.markdown(ans)
-                st.caption(f"모델: `{used_model}`")
-        st.session_state.messages.append({"role": "assistant", "content": ans})
+if st.button("오늘 날씨 어때?"):
+    q = "오늘 대한민국 주요 도시의 날씨를 알려줘."
+    st.session_state.messages.append({"role": "user", "content": q})
+    try:
+        ans, used_model = ask_gpt(q)
+    except Exception as e:
+        ans, used_model = f"오류가 발생했습니다: {e}", model_name
+    st.session_state.messages.append({"role": "assistant", "content": ans})
+    st.rerun()   # ✅ rerun으로 즉시 채팅창 반영
+
 
 # ===== 이전 대화 렌더 =====
 for m in st.session_state.messages:
