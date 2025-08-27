@@ -97,7 +97,9 @@ for m in st.session_state.messages:
 
 # ===== 입력창 =====
 default_placeholder = st.session_state.pop("_quick", None)
-user_input = st.chat_input("무엇이든 물어보세요!", placeholder=default_placeholder or "예) 감기 기운 있을 때 집에서 할 수 있는 관리 방법은?")
+user_input = st.chat_input(
+    placeholder=default_placeholder or "무엇이든 물어보세요! 예) 감기 기운 있을 때 집에서 할 수 있는 관리 방법은?"
+)
 
 # ===== GPT 호출 함수 =====
 def ask_gpt(q: str):
