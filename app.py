@@ -57,13 +57,13 @@ mode = st.segmented_control(
 
 # 모드 → 모델/파라미터 매핑 (모델명은 부모님께 숨김)
 if mode.startswith("빠르고"):
-    model_name = "gpt-4o-mini"   # 가성비/속도
+    model_name = "gpt-5-nano"   # 가성비/속도
     temperature = 0.7
-    max_tokens = 500
+    max_tokens = 1000
 else:
-    model_name = "gpt-4o"        # 고성능/정확도
+    model_name = "gpt-5"        # 고성능/정확도
     temperature = 0.5
-    max_tokens = 700
+    max_tokens = 2000
 
 # ===== 사이드 패널 =====
 with st.sidebar:
