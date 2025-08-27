@@ -1,0 +1,15 @@
+[client]
+showErrorDetails = true
+
+[theme]
+base = "light"
+primaryColor = "#2962FF"
+
+[server]
+enableCORS = true
+
+[browser]
+gatherUsageStats = false
+
+[ui]
+hideTopBar = true
