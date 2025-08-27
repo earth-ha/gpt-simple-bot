@@ -108,7 +108,7 @@ def ask_gpt(q: str):
         model=model_name,           # 현재 선택된 모델
         messages=history,
         temperature=temperature,
-        max_tokens=max_tokens
+        max_completion_tokens=max_tokens
     )
     text = resp.choices[0].message.content.strip() if resp.choices else "응답 없음"
     # ✅ 실제로 어떤 모델이 호출됐는지 같이 반환
