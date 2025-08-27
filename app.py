@@ -69,8 +69,8 @@ else:
 with st.sidebar:
     st.header("도움말")
     st.markdown(
-        "- 아래 입력창에 그냥 궁금한 *을 적고 엔터를 누르시면 됩니다.\n"
-        "- 개인정보(실명/전화/주소 등)는 넣지 말아주세요.\n"
+        "- 아래 입력창에 그냥 궁금한 것을 적고 엔터를 누르시면 됩니다.\n"
+        "- *개인정보(/전화/주소 등)는 넣지 말아주세요.\n"
         "- 중요한 결정은 공식 자료로 다시 확인해주세요.\n"
     )
     st.divider()
@@ -105,14 +105,15 @@ user_input = st.chat_input(
 def ask_gpt(q: str):
     history = [m for m in st.session_state.messages][-8:] + [{"role": "user", "content": q}]
     resp = client.chat.completions.create(
-        model=model_name,
+        model=model_name,           # 현재 선택된 모델
         messages=history,
         temperature=temperature,
         max_tokens=max_tokens
     )
-    if not resp.choices or not resp.choices[0].message or not resp.choices[0].message.content:
-        return "응답이 비었습니다. 다시 시도해 주세요."
-    return resp.choices[0].message.content.strip()
+    text = resp.choices[0].message.content.strip() if resp.choices else "응답 없음"
+    # ✅ 실제로 어떤 모델이 호출됐는지 같이 반환
+    used_model = getattr(resp, "model", model_name)
+    return text, used_model
 
 # ===== 처리 =====
 if user_input:
@@ -123,10 +124,13 @@ if user_input:
     with st.chat_message("assistant"):
         with st.spinner("생각 중…"):
             try:
-                ans = ask_gpt(user_input)
+                ans, used_model = ask_gpt(user_input)   # ✅ 두 값 받기
             except Exception as e:
-                ans = f"오류가 발생했습니다: {e}"
+                ans, used_model = f"오류가 발생했습니다: {e}", model_name
             st.markdown(ans)
+            # ✅ 실제 어떤 모델을 썼는지 표시
+            st.caption(f"모델: `{used_model}`")
+
 
     st.session_state.messages.append({"role": "assistant", "content": ans})
 
