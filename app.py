@@ -70,24 +70,42 @@ with st.sidebar:
     st.header("도움말")
     st.markdown(
         "- 아래 입력창에 그냥 궁금한 것을 적고 엔터를 누르시면 됩니다.\n"
-        "- *개인정보(/전화/주소 등)는 넣지 말아주세요.\n"
+        "- 개인정보(/전화/주소 등)는 넣지 말아주세요.\n"
         "- 중요한 결정은 공식 자료로 다시 확인해주세요.\n"
     )
-    st.divider()
-    st.subheader("🧹 대화 관리")
-    if st.button("대화 다시 시작", use_container_width=True):
-        init_messages()
-        st.toast("대화를 초기화했어요.")
-        st.rerun()
-    st.divider()
-    st.subheader("💡 예시 질문")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("오늘 뭐 해먹지?"):
-            st.session_state._quick = "냉장고에 재료가 별로 없을 때 간단히 만들 수 있는 저녁 메뉴 추천해줘."
-    with col2:
-        if st.button("여행 일정 도와줘"):
-            st.session_state._quick = "부모님과 함께 1박2일 국내 여행 일정 간단히 짜줘. 걷기 많이 안 하게."
+st.divider()
+st.subheader("💡 예시 질문")
+
+if st.button("오늘 뭐 해먹지?"):
+    q = "냉장고에 재료가 별로 없을 때 간단히 만들 수 있는 저녁 메뉴 추천해줘."
+    st.session_state.messages.append({"role": "user", "content": q})
+    with st.chat_message("user"):
+        st.markdown(q)
+    with st.chat_message("assistant"):
+        with st.spinner("생각 중…"):
+            try:
+                ans, used_model = ask_gpt(q)
+            except Exception as e:
+                ans, used_model = f"오류가 발생했습니다: {e}", model_name
+            st.markdown(ans)
+            st.caption(f"모델: `{used_model}`")
+    st.session_state.messages.append({"role": "assistant", "content": ans})
+
+if st.button("오늘 날씨 어때?"):
+    q = "오늘 대한민국 주요 도시의 날씨를 알려줘."
+    st.session_state.messages.append({"role": "user", "content": q})
+    with st.chat_message("user"):
+        st.markdown(q)
+    with st.chat_message("assistant"):
+        with st.spinner("생각 중…"):
+            try:
+                ans, used_model = ask_gpt(q)
+            except Exception as e:
+                ans, used_model = f"오류가 발생했습니다: {e}", model_name
+            st.markdown(ans)
+            st.caption(f"모델: `{used_model}`")
+    st.session_state.messages.append({"role": "assistant", "content": ans})
+
 
 # ===== 이전 대화 렌더 =====
 for m in st.session_state.messages:
